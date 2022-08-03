@@ -1,0 +1,37 @@
+From 9ac94ef739687b9eeba37e8b28108269802db280 Mon Sep 17 00:00:00 2001
+From: Cole Robinson <crobinso@redhat.com>
+Date: Wed, 13 Apr 2022 08:16:47 -0400
+Subject: [PATCH] tests: Fix another sgio=filtered case
+
+Signed-off-by: Cole Robinson <crobinso@redhat.com>
+---
+ tests/data/cli/compare/virt-install-many-devices.xml | 2 +-
+ tests/test_cli.py                                    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tests/data/cli/compare/virt-install-many-devices.xml b/tests/data/cli/compare/virt-install-many-devices.xml
+index 4c0024225..db61f5117 100644
+--- a/tests/data/cli/compare/virt-install-many-devices.xml
++++ b/tests/data/cli/compare/virt-install-many-devices.xml
+@@ -249,7 +249,7 @@
+       <source file="/var/lib/libvirt/images/disk.qcow2"/>
+       <target dev="vdc" bus="virtio"/>
+     </disk>
+-    <disk type="block" device="lun" sgio="unfiltered" rawio="yes">
++    <disk type="block" device="lun" sgio="filtered" rawio="yes">
+       <driver name="qemu" type="raw"/>
+       <source dev="/pool-iscsi/diskvol1"/>
+       <target dev="sdab" bus="scsi"/>
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 8b78a1a78..6a0df7870 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -579,7 +579,7 @@ def add_compare(self, cat, args, compbase, **kwargs):
+ --disk source.file=%(NEWIMG1)s,sparse=false,size=.001,perms=ro,error_policy=enospace,detect_zeroes=unmap,address.type=drive,address.controller=0,address.target=2,address.unit=0
+ --disk device=cdrom,bus=sata,read_bytes_sec=1,read_iops_sec=2,write_bytes_sec=5,write_iops_sec=6,driver.copy_on_read=on,geometry.cyls=16383,geometry.heads=16,geometry.secs=63,geometry.trans=lba,discard=ignore
+ --disk size=1
+---disk /pool-iscsi/diskvol1,total_bytes_sec=10,total_iops_sec=20,bus=scsi,device=lun,sgio=unfiltered,rawio=yes
++--disk /pool-iscsi/diskvol1,total_bytes_sec=10,total_iops_sec=20,bus=scsi,device=lun,sgio=filtered,rawio=yes
+ --disk /pool-dir/iso-vol,seclabel.model=dac,seclabel1.model=selinux,seclabel1.relabel=no,seclabel0.label=foo,bar,baz,iotune.read_bytes_sec=1,iotune.read_iops_sec=2,iotune.write_bytes_sec=5,iotune.write_iops_sec=6
+ --disk /pool-dir/iso-vol,format=qcow2,startup_policy=optional,iotune.total_bytes_sec=10,iotune.total_iops_sec=20,
+ --disk source_pool=pool-rbd-ceph,source_volume=some-rbd-vol,size=.1,driver_type=raw,driver_name=qemu
