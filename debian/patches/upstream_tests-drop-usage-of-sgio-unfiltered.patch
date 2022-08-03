@@ -1,56 +1,25 @@
-From c61074191d0d25ab7cd7830ef90a49a3caefcd09 Mon Sep 17 00:00:00 2001
-From: Cole Robinson <crobinso@redhat.com>
-Date: Wed, 13 Apr 2022 07:00:37 -0400
-Subject: [PATCH] tests: Drop usage of sgio=unfiltered
+From 00d2925528ef26025412263da02cb92e4664db65 Mon Sep 17 00:00:00 2001
+From: muzena <trebelnik2@gmail.com>
+Date: Wed, 3 Aug 2022 12:21:49 +0200
+Subject: [PATCH] Updae patch1
 
-libvirt 8.1.0+ rejects it, so it breaks the testsuite
-
-Fixes: #382
-
-Signed-off-by: Cole Robinson <crobinso@redhat.com>
 ---
- tests/data/testdriver/testdriver.xml    | 2 +-
- tests/data/xmlparse/change-disk-out.xml | 2 +-
- tests/test_xmlparse.py                  | 2 --
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ tests/test_xmlparse.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tests/data/testdriver/testdriver.xml b/tests/data/testdriver/testdriver.xml
-index 082ac095b..b213863d9 100644
---- a/tests/data/testdriver/testdriver.xml
-+++ b/tests/data/testdriver/testdriver.xml
-@@ -245,7 +245,7 @@ Foo bar baz &amp; yeah boii &lt; &gt; yeahfoo
-       <shareable/>
-     </disk>
- 
--    <disk type='block' device='lun' rawio='no' sgio='unfiltered'>
-+    <disk type='block' device='lun' rawio='no'>
-       <driver name='qemu' type='raw'/>
-       <source dev='/dev/szz'>
-         <reservations managed="yes"/>
-diff --git a/tests/data/xmlparse/change-disk-out.xml b/tests/data/xmlparse/change-disk-out.xml
-index 66a70395a..003750fb2 100644
---- a/tests/data/xmlparse/change-disk-out.xml
-+++ b/tests/data/xmlparse/change-disk-out.xml
-@@ -37,7 +37,7 @@
-     <disk type="file" device="floppy">
-       <target dev="fde" bus="fdc"/>
-     </disk>
--    <disk type="block" device="lun" sgio="unfiltered" rawio="yes">
-+    <disk type="block" device="lun">
-       <driver name="qemu" type="raw"/>
-       <source dev="/dev/sda"/>
-       <target dev="hdd" bus="scsi"/>
 diff --git a/tests/test_xmlparse.py b/tests/test_xmlparse.py
-index 15ca8f752..1bf0ebe58 100644
+index 1bf0ebe5..15ca8f75 100644
 --- a/tests/test_xmlparse.py
 +++ b/tests/test_xmlparse.py
-@@ -314,8 +314,6 @@ def _get_disk(target):
+@@ -314,6 +314,8 @@ def testAlterDisk():
      check = _make_checker(disk)
      check("type", "block")
      check("device", "lun")
--    check("sgio", None, "unfiltered")
--    check("rawio", None, "yes")
++    check("sgio", None, "unfiltered")
++    check("rawio", None, "yes")
  
      disk = _get_disk("sda")
      check = _make_checker(disk)
+-- 
+2.25.1
 
